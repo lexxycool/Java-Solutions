@@ -1,0 +1,417 @@
+public class Main {
+    private static LinkedList head;
+
+    public static class LinkedList {
+        int data;
+        LinkedList next;
+
+        LinkedList(int data) {
+            this.data = data;
+            this.next = null;
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+//        int[] arr = {2, 4, 1, 8, 6, 3, 7};
+//        System.out.println(findMissingNum2(arr));
+
+        head = new LinkedList(3);
+        LinkedList second = new LinkedList(5);
+        LinkedList third = new LinkedList(6);
+        LinkedList fourth = new LinkedList(8);
+        LinkedList fifth = new LinkedList(10);
+
+        head.next = second;
+        second.next = third;
+        third.next = fourth;
+        fourth.next = fifth;
+        fifth.next = third;
+
+
+//        insertAtPosition(40, 3);
+//        System.out.println(printList(head));
+
+//        System.out.println(printList(removeKey(3)));
+
+        System.out.println(hasCycle(head));
+        System.out.println(startOfLoop(head).data);
+
+
+    }
+
+    // remove even numbers from an array
+    public static int[] removeEven(int[] arr) {
+        int j = 0;
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] % 2 != 0) {
+                j++;
+            }
+        }
+        int[] result = new int[j];
+        int k = 0;
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] % 2 != 0) {
+                result[k] = arr[i];
+            } else {
+                k++;
+            }
+        }
+        return result;
+    }
+
+    //move all zeros to the end of an array
+    public static int[] moveZeros(int[] arr) {
+        int j = 0;
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] != 0 && arr[j] == 0) {
+                int temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+            if (arr[j] != 0) {
+                j++;
+            }
+        }
+        return arr;
+    }
+
+    //reverse an array in place
+    public static int[] reverse(int[] arr) {
+        int j = arr.length - 1;
+        int i = 0;
+        while (i < j) {
+            int temp = arr[j];
+            arr[j] = arr[i];
+            arr[i] = temp;
+            i++;
+            j--;
+        }
+        return arr;
+    }
+
+    //find the missing number in an array
+    // 0(n log n) time complexity
+    public static int findMissingNum(int[] arr) {
+        int result = 0;
+        Arrays.sort(arr);
+        for (int i = 0; i < arr.length - 1; i++) {
+            if (arr[i] + 1 != arr[i + 1]) {
+                result = arr[i] + 1;
+            }
+        }
+        return result;
+    }
+
+    // 0(n) time complexity
+    public static int findMissingNum2(int[] arr) {
+        int n = arr.length + 1;
+        int num = n * (n + 1) / 2;
+
+        for (int number : arr) {
+            num -= number;
+        }
+        return num;
+    }
+
+    //check if a string is a palindrome
+    public static boolean isTheSame(String str) {
+        int i = 0;
+        int j = str.length() - 1;
+
+        while (i < j) {
+            if (str.charAt(i) != (str.charAt(j))) {
+                return false;
+            }
+            i++;
+            j--;
+        }
+        return true;
+    }
+
+    //print the elements of a linked list
+    public static String printList(LinkedList head) {
+        LinkedList current = head;
+        while (current != null) {
+            System.out.print(current.data + " --> ");
+            current = current.next;
+        }
+        return null;
+    }
+
+    //count the number of nodes in a linked list
+    public static int countNodes(LinkedList head) {
+        if (head == null) {
+            return 0;
+        }
+        LinkedList current = head;
+        int count = 0;
+        while (current != null) {
+            count++;
+            current = current.next;
+        }
+        return count;
+    }
+
+    //insert a node at the beginning of a linked list
+    public static void insertAtBeginning(int data) {
+        LinkedList newNode = new LinkedList(data);
+        newNode.next = head;
+        head = newNode;
+    }
+
+    //insert a node at the end of a linked list
+    public static LinkedList insertAtEnd(int data) {
+        LinkedList newNode = new LinkedList(data);
+        if (head == null) {
+            head = newNode;
+            return head;
+        }
+        LinkedList current = head;
+        while (current.next != null) {
+            current = current.next;
+        }
+        current.next = newNode;
+        return head;
+    }
+
+    //insert a node at a specific position in a linked list
+    public static void insertAtPosition(int data, int position) {
+        LinkedList newNode = new LinkedList(data);
+        try {
+            if (position == 1) {
+                newNode.next = head;
+                head = newNode;
+            } else {
+                int count = 1;
+                LinkedList previous = head;
+                while (count < position - 1) {
+                    previous = previous.next;
+                    count++;
+                }
+                LinkedList curr = previous.next;
+                newNode.next = curr;
+                previous.next = newNode;
+            }
+        } catch (Exception e) {
+            // catch exception if the position is more than the nodes number
+            System.out.println("This node cannot be added: position is invalid");
+        }
+    }
+
+    //Delete first node in a linked list
+    public static LinkedList deleteFirstNode() {
+        if (head == null) {
+            return null;
+        }
+        LinkedList curr = head;
+        head = head.next;
+        curr.next = null;
+        return head;
+    }
+
+    //Delete last node in a linked list
+    public static LinkedList deleteLastNode() {
+        if (head == null) {
+            return null;
+        }
+        if (head.next == null) {
+            return null;
+        }
+        LinkedList current = head;
+        while (current.next.next != null) {
+            current = current.next;
+        }
+        current.next = null;
+        return head;
+    }
+
+    //Delete a node from a linked list in a given position
+    public static LinkedList deleteNodeAtPosition(int position) {
+        if (position == 1) {
+            LinkedList current = head;
+            head = head.next;
+            current.next = null;
+        } else {
+            int count = 1;
+            LinkedList previous = head;
+            while (count < position - 1) {
+                previous = previous.next;
+                count++;
+            }
+            LinkedList current = previous.next;
+            previous.next = current.next;
+            current.next = null;
+        }
+        return head;
+    }
+
+    //Delete a node from a linked list with a given value
+    public static LinkedList deleteNodeWithValue(int value) {
+        if (head == null) {
+            return null;
+        }
+        if (head.data == value) {
+            head = head.next;
+            return head;
+        }
+        LinkedList current = head;
+        while (current.next != null) {
+            if (current.next.data == value) {
+                current.next = current.next.next;
+                return head;
+            }
+            current = current.next;
+        }
+        return head;
+    }
+
+    //search for an element in a linked list
+    public static boolean search(int value) {
+        LinkedList curr = head;
+        while (curr != null) {
+            if (curr.data == value) {
+                return true;
+            }
+            curr = curr.next;
+        }
+        return false;
+    }
+
+    //how to find nth node from the end of a linked list
+    public static LinkedList findNthNode(int num) {
+        if (head == null) {
+            return null;
+        }
+        LinkedList mainPointer = head;
+        LinkedList refPointer = head;
+        int count = 0;
+        while (count < num) {
+            if (refPointer == null) {
+                throw new IllegalArgumentException("position " + num + " not in linkedlist.");
+            }
+            refPointer = refPointer.next;
+            count++;
+        }
+        while (refPointer != null) {
+            refPointer = refPointer.next;
+            mainPointer = mainPointer.next;
+        }
+        return mainPointer;
+    }
+
+    //reverse a linked list
+    public static LinkedList reverseList() {
+        if (head == null) {
+            return null;
+        }
+        LinkedList curr = head;
+        LinkedList next = head;
+        LinkedList prev = null;
+        while (curr != null) {
+            next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+        return prev;
+    }
+
+    //remove duplicates from a sorted linked list
+    public static LinkedList removeDuplicates(LinkedList head) {
+        if (head == null) {
+            return null;
+        }
+        LinkedList curr = head;
+
+        while (curr != null && curr.next != null) {
+            if (curr.data == curr.next.data) {
+                curr.next = curr.next.next;
+            } else {
+                curr = curr.next;
+            }
+        }
+        return head;
+    }
+
+    //insert a node in a sorted singly linked list
+    public static LinkedList insert(int num) {
+        if(head == null) return null;
+        LinkedList curr = head;
+        LinkedList prev = null;
+        LinkedList newNode = new LinkedList(num);
+
+        if(curr.data > newNode.data) {
+            newNode.next = head;
+            head = newNode;
+        } else {
+            while(curr != null && curr.data < newNode.data) {
+                prev = curr;
+                curr = curr.next;
+            }
+            newNode.next = curr;
+            prev.next = newNode;
+        }
+        return head;
+    }
+
+    //remove a given key from a linked list
+    public static LinkedList removeKey(int key) {
+        if (head == null) return null;
+        LinkedList curr = head;
+        LinkedList prev = null;
+
+        if(curr.data == key) {
+            curr = curr.next;
+            head = curr;
+        } else {
+            while(curr != null) {
+                if (curr.data == key) {
+                    prev.next = curr.next;
+                    break;
+                } else {
+                    prev = curr;
+                    curr = curr.next;
+                }
+            }
+        }
+        return head;
+    }
+
+    //detect a cycle in a linked list
+    public static boolean hasCycle(LinkedList head) {
+        if(head == null) return false;
+        LinkedList slow = head;
+        LinkedList fast = head;
+
+        while(fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+            if(slow == fast) return true;
+        }
+        return false;
+    }
+
+    //find the start of a loop cycle in singly linked list
+    public static LinkedList startOfLoop(LinkedList head) {
+        if(head == null) return null;
+        LinkedList slow = head;
+        LinkedList fast = head;
+
+        while(fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+            if(slow == fast) return getStartingNode(slow);
+        }
+        return null;
+    }
+
+    private static LinkedList getStartingNode(LinkedList slow) {
+        LinkedList curr = head;
+        while(curr != slow) {
+            curr = curr.next;
+            slow = slow.next;
+        }
+        return curr;
+    }
+
+}
